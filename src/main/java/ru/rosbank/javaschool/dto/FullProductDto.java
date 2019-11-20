@@ -13,6 +13,10 @@ public class FullProductDto {
     private List<String> composition;
     private boolean presence;
 
+    public FullProductDto(boolean presence) {
+        this.presence = presence;
+    }
+
     public FullProductDto() {
     }
 
@@ -49,9 +53,7 @@ public class FullProductDto {
     public List<String> getComposition() {
         return composition;
     }
-    public void setPresence() {
-        this.presence = presence;
-    }
+
 
     public boolean getPresence() {
         return presence;
@@ -73,7 +75,4 @@ public class FullProductDto {
         this.composition = composition;
     }
 
-    public void setPresence(boolean presence) {
-        this.presence = presence;
-    }
 }

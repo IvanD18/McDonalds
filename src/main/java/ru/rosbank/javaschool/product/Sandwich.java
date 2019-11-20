@@ -1,9 +1,10 @@
 package ru.rosbank.javaschool.product;
 
+import lombok.Data;
 import ru.rosbank.javaschool.dto.FullProductDto;
 
 import java.util.List;
-
+@Data
 public class Sandwich extends FullProductDto {
     private String name;
 

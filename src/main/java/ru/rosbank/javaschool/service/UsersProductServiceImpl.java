@@ -1,16 +1,13 @@
 package ru.rosbank.javaschool.service;
 
 import ru.rosbank.javaschool.dto.FullProductDto;
-import ru.rosbank.javaschool.dto.ProductDto;
-import ru.rosbank.javaschool.exception.DataNotFoundException;
+
 import ru.rosbank.javaschool.exception.DataSaveException;
-import ru.rosbank.javaschool.exception.InvalidDataException;
+
 import ru.rosbank.javaschool.model.ProductModel;
 import ru.rosbank.javaschool.repository.BasketRepository;
 import ru.rosbank.javaschool.repository.ProductRepository;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class UsersProductServiceImpl implements UsersProductService {
     private final ProductRepository repository;

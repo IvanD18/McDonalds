@@ -1,9 +1,11 @@
 package ru.rosbank.javaschool.product;
 
+import lombok.Data;
 import ru.rosbank.javaschool.dto.FullProductDto;
 
 import java.util.List;
 
+@Data
 public class Potato extends FullProductDto {
     private String size;
 

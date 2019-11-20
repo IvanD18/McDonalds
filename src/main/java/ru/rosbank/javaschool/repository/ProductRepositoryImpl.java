@@ -51,7 +51,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public int lastAddId() {
-        return nextId-1;
+        return nextId - 1;
     }
 
 

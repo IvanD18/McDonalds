@@ -1,74 +1,83 @@
 package ru.rosbank.javaschool.service;
-
-import lombok.Data;
-import lombok.val;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Null;
+import org.mockito.Mockito;
 import ru.rosbank.javaschool.dto.FullProductDto;
 import ru.rosbank.javaschool.exception.DataNotFoundException;
+import ru.rosbank.javaschool.exception.InvalidDataException;
 import ru.rosbank.javaschool.model.ProductModel;
-import ru.rosbank.javaschool.repository.ProductRepositoryImpl;
 import ru.rosbank.javaschool.repository.ProductRepository;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class AdministratorProductServiceImplTest {
 
     @Test
     void getAllShouldReturnNullNoItemsInRep() {
-        ProductRepository repository= mock(ProductRepository.class);
-        doReturn(Collections.emptyList()).when(repository).getAll();
+        ProductRepository repository = mock(ProductRepository.class);
+
+        Collection<ProductModel> items = new LinkedList<>();
+        Mockito.when(repository.getAll()).thenReturn(items);
         AdministratorProductServiceImpl service = new AdministratorProductServiceImpl(repository);
         assertNotNull(service.getAll());
-    }
+    }//correct
+
     @Test
-    void getAllShouldReturnNotNullOneItemInRep() {
-        ProductRepository repository= mock(ProductRepository.class);
-        doReturn(Collections.emptyList()).when(repository).getAll();
+    void getAllShouldThrowNullPointerException() {
+        ProductRepository repository = mock(ProductRepository.class);
+        Mockito.when(repository.getAll()).thenReturn(null);
         AdministratorProductServiceImpl service = new AdministratorProductServiceImpl(repository);
-        assertNotNull(service.getAll());
-    }
+        assertThrows(NullPointerException.class, () -> service.getAll());
+    }//correct
 
 
     @Test
     void getByIdShouldThrowExceptionNoItemsInRep() {
-        ProductRepository repository= mock(ProductRepository.class);
+        ProductRepository repository = mock(ProductRepository.class);
         doReturn(Optional.empty()).when(repository).getById(1);
         AdministratorProductServiceImpl service = new AdministratorProductServiceImpl(repository);
-        assertThrows(DataNotFoundException.class,()->service.getById(1));
-    }
+        assertThrows(DataNotFoundException.class, () -> service.getById(1));
+    }//correct
 
     @Test
     void getByIdShouldThrowExceptionWhenNoSuchItemsInRep() {
-        ProductRepository repository= mock(ProductRepository.class);
-        doReturn(Optional.empty()).when(repository).getById(anyInt());
-        doReturn(Optional.of(new ProductModel())).when(repository).getById(1);
-
+        ProductRepository repository = mock(ProductRepository.class);
+        repository.create(new ProductModel());
         AdministratorProductServiceImpl service = new AdministratorProductServiceImpl(repository);
-        assertThrows(DataNotFoundException.class,()->service.getById(2));
-    }
+        assertThrows(DataNotFoundException.class, () -> service.getById(2));
+    }//correct
+
 
     @Test
-    void getByIdShouldReturnDtoWhenItemsPresentInRep() {
-        ProductRepository repository= mock(ProductRepository.class);
-        doReturn(Optional.of(new ProductModel())).when(repository).getById(1);
+    void save0MoreThenIdShouldThrowInvalidDataException() {
+        ProductRepository repository = mock(ProductRepository.class);
+        ProductModel model = new ProductModel();
+        model.setId(-1);
+        Mockito.when(repository.create(model)).thenReturn(model);
         AdministratorProductServiceImpl service = new AdministratorProductServiceImpl(repository);
-        assertNotNull(service.getById(1));
-    }
+        assertThrows(InvalidDataException.class, () -> service.save(FullProductDto.from(model)));
+    }//correct
 
     @Test
-    void save() {
+    void save0MoreThenPriceShouldThrowInvalidDataException() {
+        ProductRepository repository = mock(ProductRepository.class);
+        ProductModel model = new ProductModel();
+        model.setPrice(-1);
+        Mockito.when(repository.create(model)).thenReturn(model);
+        AdministratorProductServiceImpl service = new AdministratorProductServiceImpl(repository);
+        assertThrows(InvalidDataException.class, () -> service.save(FullProductDto.from(model)));
+    }//correct
 
-
-    }
 
     @Test
-    void removeById() {
-    }
+    void removeByNotRemovedByIdThrowDataNotFoundException() {
+        ProductRepository repository = mock(ProductRepository.class);
+        Mockito.when(repository.removeById(1)).thenReturn(false);
+        AdministratorProductServiceImpl service = new AdministratorProductServiceImpl(repository);
+        assertThrows(DataNotFoundException.class, () -> service.removeById(1));
+    }//correct
+
+
 }
